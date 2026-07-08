@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>12-Hour to 24-Hour Time Converter | Learn Time Conversion</title>
+  <meta name="description" content="An interactive educational tool to learn how to convert 12-hour AM/PM time to 24-hour military time. Fun, colorful, and child-friendly!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Floating Clock Icons Background -->
+  <div class="floating-clocks" aria-hidden="true">
+    <span class="float-icon" style="--i:0">🕐</span>
+    <span class="float-icon" style="--i:1">🕑</span>
+    <span class="float-icon" style="--i:2">🕒</span>
+    <span class="float-icon" style="--i:3">🕓</span>
+    <span class="float-icon" style="--i:4">🕔</span>
+    <span class="float-icon" style="--i:5">🕕</span>
+    <span class="float-icon" style="--i:6">🕖</span>
+    <span class="float-icon" style="--i:7">🕗</span>
+    <span class="float-icon" style="--i:8">🕘</span>
+    <span class="float-icon" style="--i:9">🕙</span>
+    <span class="float-icon" style="--i:10">🕚</span>
+    <span class="float-icon" style="--i:11">🕛</span>
+  </div>
+
+  <!-- Confetti Container -->
+  <div id="confetti-container" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">🕰️ TimeLearn</div>
+    <div class="nav-links">
+      <a href="#converter">Converter</a>
+      <a href="#concepts">Learn</a>
+      <a href="#practice">Practice</a>
+      <a href="#quiz">Quiz</a>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark/light mode">
+      <span class="theme-icon">🌙</span>
+    </button>
+  </nav>
+
+  <!-- ===== 1. HERO SECTION ===== -->
+  <header class="hero" id="hero">
+    <div class="hero-content fade-in">
+      <h1 class="hero-title">
+        <span class="title-line">12-Hour to 24-Hour</span>
+        <span class="title-accent">Time Converter</span>
+      </h1>
+      <p class="hero-subtitle">Learn how clocks work while converting time instantly! 🎉</p>
+      <div class="hero-clock" aria-label="Animated clock illustration">
+        <div class="clock-face">
+          <div class="clock-center"></div>
+          <div class="hand hour-hand" id="heroHourHand"></div>
+          <div class="hand minute-hand" id="heroMinuteHand"></div>
+          <div class="hand second-hand" id="heroSecondHand"></div>
+          <span class="clock-number" style="--n:1">1</span>
+          <span class="clock-number" style="--n:2">2</span>
+          <span class="clock-number" style="--n:3">3</span>
+          <span class="clock-number" style="--n:4">4</span>
+          <span class="clock-number" style="--n:5">5</span>
+          <span class="clock-number" style="--n:6">6</span>
+          <span class="clock-number" style="--n:7">7</span>
+          <span class="clock-number" style="--n:8">8</span>
+          <span class="clock-number" style="--n:9">9</span>
+          <span class="clock-number" style="--n:10">10</span>
+          <span class="clock-number" style="--n:11">11</span>
+          <span class="clock-number" style="--n:12">12</span>
+        </div>
+      </div>
+      <a href="#converter" class="btn btn-primary btn-hero" id="startBtn">
+        🚀 Start Converting!
+      </a>
+    </div>
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,64 C360,120 720,0 1080,64 C1260,96 1380,80 1440,64 L1440,120 L0,120 Z" />
+      </svg>
+    </div>
+  </header>
+
+  <!-- ===== 2. TIME CONVERTER ===== -->
+  <section class="section" id="converter">
+    <div class="container">
+      <h2 class="section-title fade-in">⏰ Time Converter</h2>
+      <p class="section-desc fade-in">Enter a 12-hour time and see its 24-hour equivalent!</p>
+
+      <div class="converter-card glass fade-in">
+        <div class="input-group">
+          <div class="input-field">
+            <label for="inputHour">Hour</label>
+            <input type="number" id="inputHour" min="1" max="12" value="2" placeholder="1-12" aria-label="Hour (1 to 12)" />
+          </div>
+          <span class="separator">:</span>
+          <div class="input-field">
+            <label for="inputMinute">Minute</label>
+            <input type="number" id="inputMinute" min="0" max="59" value="30" placeholder="00-59" aria-label="Minute (0 to 59)" />
+          </div>
+          <span class="separator">:</span>
+          <div class="input-field">
+            <label for="inputSecond">Second</label>
+            <input type="number" id="inputSecond" min="0" max="59" value="45" placeholder="00-59" aria-label="Second (0 to 59)" />
+          </div>
+          <div class="input-field">
+            <label for="inputPeriod">Period</label>
+            <select id="inputPeriod" aria-label="AM or PM">
+              <option value="AM">AM</option>
+              <option value="PM" selected>PM</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="error-message" id="errorMsg" role="alert" aria-live="polite"></div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary ripple" id="convertBtn" aria-label="Convert time">🔄 Convert</button>
+          <button class="btn btn-secondary ripple" id="resetBtn" aria-label="Reset fields">🔃 Reset</button>
+          <button class="btn btn-accent ripple" id="exampleBtn" aria-label="Load example">📋 Example</button>
+          <button class="btn btn-fun ripple" id="randomBtn" aria-label="Generate random time">🎲 Random</button>
+        </div>
+
+        <div class="result-box" id="resultBox">
+          <div class="result-label">24-Hour Time</div>
+          <div class="result-time" id="resultTime">--:--:--</div>
+          <div class="result-breakdown" id="resultBreakdown"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. EXPLAIN THE CONCEPT ===== -->
+  <section class="section section-alt" id="concepts">
+    <div class="container">
+      <h2 class="section-title fade-in">📚 Understand the Concepts</h2>
+      <p class="section-desc fade-in">Let's learn the difference between 12-hour and 24-hour time!</p>
+
+      <div class="card-grid">
+        <!-- Card 1: 12-Hour Time -->
+        <div class="concept-card glass fade-in" style="--card-accent: #4F46E5">
+          <div class="card-icon">🕐</div>
+          <h3>What is 12-Hour Time?</h3>
+          <p>The 12-hour clock divides the day into <strong>two halves</strong>:</p>
+          <ul class="example-list">
+            <li><span class="badge badge-am">AM</span> Midnight to Noon (morning)</li>
+            <li><span class="badge badge-pm">PM</span> Noon to Midnight (afternoon/evening)</li>
+          </ul>
+          <div class="example-box">
+            <div class="example-item"><span class="time-display">7:30 AM</span> = Morning</div>
+            <div class="example-item"><span class="time-display">4:45 PM</span> = Afternoon</div>
+          </div>
+        </div>
+
+        <!-- Card 2: 24-Hour Time -->
+        <div class="concept-card glass fade-in" style="--card-accent: #22C55E">
+          <div class="card-icon">🕛</div>
+          <h3>What is 24-Hour Time?</h3>
+          <p>The 24-hour clock counts hours from <strong>00 to 23</strong>. There is no AM or PM!</p>
+          <div class="example-box">
+            <div class="example-item"><span class="time-display">07:30</span> = 7:30 AM</div>
+            <div class="example-item"><span class="time-display">16:45</span> = 4:45 PM</div>
+            <div class="example-item"><span class="time-display">23:59</span> = 11:59 PM</div>
+            <div class="example-item"><span class="time-display">00:00</span> = Midnight</div>
+          </div>
+        </div>
+
+        <!-- Card 3: Conversion Rules -->
+        <div class="concept-card glass fade-in" style="--card-accent: #F59E0B">
+          <div class="card-icon">📏</div>
+          <h3>Conversion Rules</h3>
+          <div class="rules-section">
+            <h4><span class="badge badge-am">AM Rules</span></h4>
+            <div class="rule-list">
+              <div class="rule-item">✔ 12:00 AM → <strong>00:00</strong></div>
+              <div class="rule-item">✔ 1:00 AM → <strong>01:00</strong></div>
+              <div class="rule-item">✔ 9:00 AM → <strong>09:00</strong></div>
+              <div class="rule-item">✔ 11:00 AM → <strong>11:00</strong></div>
+            </div>
+            <h4><span class="badge badge-pm">PM Rules</span></h4>
+            <div class="rule-list">
+              <div class="rule-item">✔ 12:00 PM → <strong>12:00</strong></div>
+              <div class="rule-item">✔ 1:00 PM → <strong>13:00</strong></div>
+              <div class="rule-item">✔ 2:00 PM → <strong>14:00</strong></div>
+              <div class="rule-item">✔ 6:00 PM → <strong>18:00</strong></div>
+              <div class="rule-item">✔ 11:00 PM → <strong>23:00</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 4. ALGORITHM SECTION ===== -->
+  <section class="section" id="algorithm">
+    <div class="container">
+      <h2 class="section-title fade-in">🧩 The Algorithm</h2>
+      <p class="section-desc fade-in">Follow these simple steps to convert any time!</p>
+
+      <div class="algorithm-steps">
+        <div class="step-card glass fade-in">
+          <div class="step-number">1</div>
+          <div class="step-icon">📖</div>
+          <div class="step-text">Read the Time</div>
+          <div class="step-detail">e.g., "02:30:45 PM"</div>
+        </div>
+        <div class="step-arrow fade-in">↓</div>
+
+        <div class="step-card glass fade-in">
+          <div class="step-number">2</div>
+          <div class="step-icon">✂️</div>
+          <div class="step-text">Separate Time & AM/PM</div>
+          <div class="step-detail">"02:30:45" and "PM"</div>
+        </div>
+        <div class="step-arrow fade-in">↓</div>
+
+        <div class="step-card glass fade-in">
+          <div class="step-number">3</div>
+          <div class="step-icon">🔢</div>
+          <div class="step-text">Split into Hour, Minute, Second</div>
+          <div class="step-detail">Hour=2, Min=30, Sec=45</div>
+        </div>
+        <div class="step-arrow fade-in">↓</div>
+
+        <div class="step-card glass fade-in">
+          <div class="step-number">4</div>
+          <div class="step-icon">🌅</div>
+          <div class="step-text">If AM and Hour is 12 → Hour = 00</div>
+          <div class="step-detail">12 AM = midnight = 00</div>
+        </div>
+        <div class="step-arrow fade-in">↓</div>
+
+        <div class="step-card glass fade-in">
+          <div class="step-number">5</div>
+          <div class="step-icon">🌇</div>
+          <div class="step-text">If PM and Hour ≠ 12 → Add 12</div>
+          <div class="step-detail">2 PM → 2 + 12 = 14</div>
+        </div>
+        <div class="step-arrow fade-in">↓</div>
+
+        <div class="step-card glass fade-in">
+          <div class="step-number">6</div>
+          <div class="step-icon">✅</div>
+          <div class="step-text">Display the New Time!</div>
+          <div class="step-detail">14:30:45</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 5. FLOWCHART ===== -->
+  <section class="section section-alt" id="flowchart">
+    <div class="container">
+      <h2 class="section-title fade-in">🗺️ Flowchart</h2>
+      <p class="section-desc fade-in">See the complete decision process in a visual flowchart!</p>
+
+      <div class="flowchart glass fade-in">
+        <div class="flow-node flow-start">▶ Start</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node flow-io">📥 Input Time (HH:MM:SS AM/PM)</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node flow-decision">❓ Is it AM?</div>
+        <div class="flow-branches">
+          <!-- YES branch -->
+          <div class="flow-branch">
+            <div class="flow-label flow-yes">✅ Yes</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node flow-decision">Hour = 12?</div>
+            <div class="flow-sub-branches">
+              <div class="flow-branch">
+                <div class="flow-label flow-yes">Yes</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node flow-process">Hour = 00</div>
+              </div>
+              <div class="flow-branch">
+                <div class="flow-label flow-no">No</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node flow-process">Keep Hour</div>
+              </div>
+            </div>
+          </div>
+          <!-- NO branch -->
+          <div class="flow-branch">
+            <div class="flow-label flow-no">❌ No (PM)</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node flow-decision">Hour = 12?</div>
+            <div class="flow-sub-branches">
+              <div class="flow-branch">
+                <div class="flow-label flow-yes">Yes</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node flow-process">Keep Hour</div>
+              </div>
+              <div class="flow-branch">
+                <div class="flow-label flow-no">No</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-node flow-process">Hour + 12</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node flow-io">📤 Display HH:MM:SS</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node flow-end">⏹ End</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 6. CODE EXPLANATION ===== -->
+  <section class="section" id="code">
+    <div class="container">
+      <h2 class="section-title fade-in">💻 Python Code Explained</h2>
+      <p class="section-desc fade-in">Click each line to see a friendly explanation!</p>
+
+      <div class="code-explainer fade-in">
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-var">time</span> = <span class="py-func">input</span>(<span class="py-str">"Enter time (HH:MM:SS AM/PM): "</span>)</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Reads the time entered by the user from the keyboard. For example: <code>02:30:45 PM</code></span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-var">parts</span> = time.<span class="py-func">split</span>()</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Separates the clock part and AM/PM using the space. Result: <code>["02:30:45", "PM"]</code></span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-var">clock</span> = parts[<span class="py-num">0</span>]</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Stores the time part. Gets the first item: <code>"02:30:45"</code></span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-var">period</span> = parts[<span class="py-num">1</span>]</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Stores AM or PM. Gets the second item: <code>"PM"</code></span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-var">hour</span>, <span class="py-var">minute</span>, <span class="py-var">second</span> = clock.<span class="py-func">split</span>(<span class="py-str">":"</span>)</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Splits the time by the colon <code>:</code> into three parts: hour=<code>"02"</code>, minute=<code>"30"</code>, second=<code>"45"</code></span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-var">hour</span> = <span class="py-func">int</span>(hour)</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Converts the hour from a text string into a number so we can do math with it. <code>"02"</code> → <code>2</code></span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-key">if</span> period.<span class="py-func">upper</span>() == <span class="py-str">"AM"</span>:</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Checks if the time is in the <strong>morning</strong> (AM). The <code>.upper()</code> makes sure both "am" and "AM" work!</span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text">    <span class="py-key">if</span> hour == <span class="py-num">12</span>:</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Special case! <strong>12 AM is midnight</strong>, which is <code>00:00</code> in 24-hour time. So we set hour to 0.</span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text">        hour = <span class="py-num">0</span></div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>12 AM becomes <code>00</code> (midnight). This is the trickiest part of time conversion!</span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-key">else</span>:  <span class="py-comment"># PM</span></div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>If it's not AM, then it must be <strong>PM</strong> (afternoon/evening). Different rules apply!</span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text">    <span class="py-key">if</span> hour != <span class="py-num">12</span>:</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>For PM times, we add 12 to the hour — <strong>except 12 PM</strong>, which stays as 12. So we check if hour is NOT 12.</span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text">        hour += <span class="py-num">12</span></div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Adds 12 to convert PM hours. Example: 2 PM → 2+12 = <strong>14</strong>. 6 PM → 6+12 = <strong>18</strong>.</span>
+          </div>
+        </div>
+
+        <div class="code-line expandable" data-expanded="false">
+          <div class="code-text"><span class="py-func">print</span>(<span class="py-str">f"</span>{hour:<span class="py-num">02</span>}:{minute}:{second}<span class="py-str">"</span>)</div>
+          <div class="code-explanation">
+            <span class="explain-icon">💡</span>
+            <span>Displays the final 24-hour time! The <code>:02</code> makes sure the hour always has two digits (e.g., <code>09</code> not <code>9</code>).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 7. INTERACTIVE PRACTICE ===== -->
+  <section class="section section-alt" id="practice">
+    <div class="container">
+      <h2 class="section-title fade-in">🎮 Practice Time!</h2>
+      <p class="section-desc fade-in">Test your skills with random time conversion challenges!</p>
+
+      <div class="practice-area fade-in">
+        <div class="scoreboard glass">
+          <div class="score-item">
+            <span class="score-label">Score</span>
+            <span class="score-value" id="practiceScore">0</span>
+          </div>
+          <div class="score-item">
+            <span class="score-label">Streak</span>
+            <span class="score-value" id="practiceStreak">0 🔥</span>
+          </div>
+          <div class="score-item">
+            <span class="score-label">Stars</span>
+            <span class="score-value" id="practiceStars">⭐ 0</span>
+          </div>
+          <div class="score-item badges-row">
+            <span class="score-label">Badges</span>
+            <span class="score-value" id="practiceBadges"></span>
+          </div>
+        </div>
+
+        <div class="practice-card glass">
+          <div class="practice-prompt">
+            <span class="prompt-label">Convert this time:</span>
+            <span class="prompt-time" id="practiceQuestion">--:--:-- --</span>
+          </div>
+
+          <div class="practice-input-group">
+            <input type="text" id="practiceAnswer" placeholder="Enter 24-hour time (HH:MM:SS)" maxlength="8" aria-label="Your answer in 24-hour format" />
+            <button class="btn btn-primary ripple" id="checkAnswerBtn">✔ Check</button>
+          </div>
+
+          <div class="practice-feedback" id="practiceFeedback" role="alert" aria-live="polite"></div>
+
+          <button class="btn btn-accent ripple" id="nextQuestionBtn" style="display:none">➡ Next Question</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 8. FUN FACTS ===== -->
+  <section class="section" id="facts">
+    <div class="container">
+      <h2 class="section-title fade-in">🎉 Fun Facts</h2>
+      <p class="section-desc fade-in">Did you know? 24-hour time is used all around the world!</p>
+
+      <div class="facts-grid">
+        <div class="fact-card glass fade-in">
+          <div class="fact-emoji">🌍</div>
+          <p>Most countries around the world use 24-hour time as their standard.</p>
+        </div>
+        <div class="fact-card glass fade-in">
+          <div class="fact-emoji">✈️</div>
+          <p>Airports use 24-hour time on departure boards to avoid AM/PM confusion.</p>
+        </div>
+        <div class="fact-card glass fade-in">
+          <div class="fact-emoji">🚂</div>
+          <p>Railways and train schedules worldwide use 24-hour time for clarity.</p>
+        </div>
+        <div class="fact-card glass fade-in">
+          <div class="fact-emoji">🏥</div>
+          <p>Hospitals use 24-hour time to prevent medication errors. Safety first!</p>
+        </div>
+        <div class="fact-card glass fade-in">
+          <div class="fact-emoji">🚢</div>
+          <p>The Navy and military use "military time" — that's 24-hour time!</p>
+        </div>
+        <div class="fact-card glass fade-in">
+          <div class="fact-emoji">🖥️</div>
+          <p>Computers and servers internally use 24-hour time (and often UTC).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 9. LIVE DIGITAL CLOCK ===== -->
+  <section class="section section-alt" id="liveclock">
+    <div class="container">
+      <h2 class="section-title fade-in">🕰️ Live Digital Clock</h2>
+      <p class="section-desc fade-in">Watch both clocks tick in real time — side by side!</p>
+
+      <div class="live-clocks fade-in">
+        <div class="live-clock-card glass">
+          <h3>12-Hour Clock</h3>
+          <div class="digital-time" id="clock12">--:--:-- --</div>
+          <div class="clock-label-tag">AM / PM format</div>
+        </div>
+        <div class="live-clock-card glass">
+          <h3>24-Hour Clock</h3>
+          <div class="digital-time digital-24" id="clock24">--:--:--</div>
+          <div class="clock-label-tag">Military format</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 10. QUIZ ===== -->
+  <section class="section" id="quiz">
+    <div class="container">
+      <h2 class="section-title fade-in">📝 Quiz Time!</h2>
+      <p class="section-desc fade-in">Test your knowledge with 10 multiple-choice questions!</p>
+
+      <div class="quiz-area fade-in">
+        <div class="quiz-progress">
+          <div class="quiz-progress-bar" id="quizProgressBar" style="width: 0%"></div>
+        </div>
+        <div class="quiz-score-display">
+          Question <span id="quizCurrent">1</span> / <span id="quizTotal">10</span>
+          &nbsp;|&nbsp; Score: <span id="quizScore">0</span>
+        </div>
+
+        <div class="quiz-card glass" id="quizCard">
+          <div class="quiz-question" id="quizQuestion">Loading...</div>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-feedback" id="quizFeedback" role="alert" aria-live="polite"></div>
+          <button class="btn btn-primary ripple" id="quizNextBtn" style="display:none">Next Question ➡</button>
+        </div>
+
+        <div class="quiz-result glass" id="quizResult" style="display:none">
+          <div class="result-emoji" id="quizResultEmoji"></div>
+          <h3 id="quizResultTitle"></h3>
+          <p id="quizResultText"></p>
+          <div class="result-score" id="quizResultScore"></div>
+          <button class="btn btn-primary ripple" id="quizRestartBtn">🔄 Try Again</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 11. FOOTER ===== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="footer-logo">🕰️ TimeLearn</span>
+          <p>Made for Learning Time Conversion</p>
+        </div>
+        <div class="footer-icons">
+          🕐 🕑 🕒 🕓 🕔 🕕 🕖 🕗 🕘 🕙 🕚 🕛
+        </div>
+        <div class="footer-links">
+          <a href="#hero">Home</a>
+          <a href="#converter">Converter</a>
+          <a href="#concepts">Learn</a>
+          <a href="#practice">Practice</a>
+          <a href="#quiz">Quiz</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>✨ Learning time, one tick at a time! ✨</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
